@@ -27,9 +27,7 @@ namespace SteganoStrings
 
         private static void HideTextInImage(Bitmap image, string text)
         {
-            int textLength = text.Length, charIndex = 0;
-            int width = image.Width, height = image.Height;
-
+            int textLength = text.Length, charIndex = 0, width = image.Width, height = image.Height;
             BitmapData bmpData = image.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadWrite, image.PixelFormat);
 
             try
@@ -44,10 +42,9 @@ namespace SteganoStrings
                 for (int i = 0; i < width; i++)
                     for (int j = 0; j < height; j++)
                     {
+                        int offset = (j * bmpData.Stride) + (i * pixelSize);
                         if (charIndex < textLength)
                         {
-                            int offset = (j * bmpData.Stride) + (i * pixelSize);
-
                             // Modify the blue component with the text data
                             char letter = text[charIndex];
                             int value = Convert.ToInt32(letter);
@@ -57,7 +54,6 @@ namespace SteganoStrings
                         if (i == width - 1 && j == height - 1)
                         {
                             // Set the last pixel to store the text length
-                            int offset = (j * bmpData.Stride) + (i * pixelSize);
                             rgbValues[offset] = (byte)textLength;
                         }
 
