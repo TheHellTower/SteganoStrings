@@ -36,7 +36,7 @@ namespace Runtime
                         {
                             if (charIndex < textLength)
                             {
-                                int offset = j * bmpData.Stride + i * 3; // Assuming 24bpp image
+                                int offset = (j * bmpData.Stride) + (i * 3); // Assuming 24bpp image
                                 byte blue = rgbValues[offset + 0];
                                 char c = Convert.ToChar(blue);
                                 extractedText += c;
@@ -57,13 +57,13 @@ namespace Runtime
         static Color GetLastPixelColor(Bitmap image)
         {
             int width = image.Width, height = image.Height;
-
             BitmapData bmpData = image.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, image.PixelFormat);
 
             try
             {
                 // Calculate the index of the last pixel
-                int lastPixelIndex = (height - 1) * bmpData.Stride + (width - 1) * Image.GetPixelFormatSize(image.PixelFormat) / 8;
+                int lastPixelIndex = ((height - 1) * bmpData.Stride) + ((width - 1) * Image.GetPixelFormatSize(image.PixelFormat) / 8);
+
 
                 // Extract color components from the last pixel
                 byte blue = Marshal.ReadByte(bmpData.Scan0, lastPixelIndex), green = Marshal.ReadByte(bmpData.Scan0, lastPixelIndex + 1), red = Marshal.ReadByte(bmpData.Scan0, lastPixelIndex + 2);

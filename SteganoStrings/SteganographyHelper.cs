@@ -46,7 +46,7 @@ namespace SteganoStrings
                     {
                         if (charIndex < textLength)
                         {
-                            int offset = j * bmpData.Stride + i * pixelSize;
+                            int offset = (j * bmpData.Stride) + (i * pixelSize);
 
                             // Modify the blue component with the text data
                             char letter = text[charIndex];
@@ -57,7 +57,7 @@ namespace SteganoStrings
                         if (i == width - 1 && j == height - 1)
                         {
                             // Set the last pixel to store the text length
-                            int offset = j * bmpData.Stride + i * pixelSize;
+                            int offset = (j * bmpData.Stride) + (i * pixelSize);
                             rgbValues[offset] = (byte)textLength;
                         }
 
