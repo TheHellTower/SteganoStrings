@@ -6,7 +6,7 @@
 
 ## :bug: Known "issues" ?
 
-- Slow startup
+- Slow startup | Performances Improvement (See [This Commit](https://github.com/TheHellTower/SteganoStrings/commit/a6b9a6bebbcf6c62f2e93d25154d28b36eea8f40) & [GetPixel & SetPixel VS LockBits](https://gg.gg/GetPixelAndSetPixelVSLockBits))
 
 
 ## 📜 What does it do ?
