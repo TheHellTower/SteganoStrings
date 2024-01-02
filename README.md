@@ -4,9 +4,17 @@
 
 [![CodeFactor](https://www.codefactor.io/repository/github/thehelltower/steganostrings/badge)](https://www.codefactor.io/repository/github/thehelltower/steganostrings)
 
-## 📜 What it does ?
+## :bug: Known "issues" ?
 
-This hides strings into a random image stored in user-file resources then the image is used to get the strings back ! :)
+- Slow startup
+
+
+## 📜 What does it do ?
+
+This hides strings into a random image stored in user-file resources then the image is used to get the strings back ! :
+<br><br>
+
+**THIS IS ONLY A PoC THIS IS NOT INTENTED TO BE USED as-is in your files.**
 
 <br>
 
