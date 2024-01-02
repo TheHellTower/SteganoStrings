@@ -64,7 +64,6 @@ namespace Runtime
                 // Calculate the index of the last pixel
                 int lastPixelIndex = ((height - 1) * bmpData.Stride) + ((width - 1) * Image.GetPixelFormatSize(image.PixelFormat) / 8);
 
-
                 // Extract color components from the last pixel
                 byte blue = Marshal.ReadByte(bmpData.Scan0, lastPixelIndex), green = Marshal.ReadByte(bmpData.Scan0, lastPixelIndex + 1), red = Marshal.ReadByte(bmpData.Scan0, lastPixelIndex + 2);
 
