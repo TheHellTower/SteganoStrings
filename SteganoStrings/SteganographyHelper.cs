@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace SteganoStrings
 {
-    //https://github.com/tank130701/Steganography/blob/master/Steganography/Program.cs
     public static class SteganographyHelper
     {
         public static Bitmap EncodeText(Stream imageStream, string text)
@@ -13,7 +14,7 @@ namespace SteganoStrings
                 throw new ArgumentException("Text to be hidden cannot be null or empty.");
 
             Bitmap image = new Bitmap(imageStream);
-            var textSize = text.Length * 8; // Assuming each character is represented by 16 bits
+            var textSize = text.Length * 8; // Assuming each character is represented by 8 bits
             var textSizeInKB = textSize / 1024;
 
             if (textSizeInKB > GetImageSizeInKB(image))
@@ -27,38 +28,50 @@ namespace SteganoStrings
         private static void HideTextInImage(Bitmap image, string text)
         {
             int textLength = text.Length, charIndex = 0;
+            int width = image.Width, height = image.Height;
 
-            for (int i = 0; i < image.Width; i++)
+            BitmapData bmpData = image.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadWrite, image.PixelFormat);
+
+            try
             {
-                for (int j = 0; j < image.Height; j++)
-                {
-                    Color pixel = image.GetPixel(i, j);
+                IntPtr ptr = bmpData.Scan0;
+                int bytes = Math.Abs(bmpData.Stride) * height;
+                byte[] rgbValues = new byte[bytes];
+                Marshal.Copy(ptr, rgbValues, 0, bytes);
 
-                    if (charIndex < textLength)
+                int pixelSize = Image.GetPixelFormatSize(image.PixelFormat) / 8; // Bytes per pixel
+
+                for (int i = 0; i < width; i++)
+                    for (int j = 0; j < height; j++)
                     {
-                        char letter = text[charIndex];
-                        int value = Convert.ToInt32(letter);
-                        Color modifiedColor = ModifyPixelColor(value);
-                        image.SetPixel(i, j, modifiedColor);
+                        if (charIndex < textLength)
+                        {
+                            int offset = j * bmpData.Stride + i * pixelSize;
+
+                            // Modify the blue component with the text data
+                            char letter = text[charIndex];
+                            int value = Convert.ToInt32(letter);
+                            rgbValues[offset] = (byte)value;
+                        }
+
+                        if (i == width - 1 && j == height - 1)
+                        {
+                            // Set the last pixel to store the text length
+                            int offset = j * bmpData.Stride + i * pixelSize;
+                            rgbValues[offset] = (byte)textLength;
+                        }
+
+                        charIndex++;
                     }
 
-                    if (i == image.Width - 1 && j == image.Height - 1)
-                        image.SetPixel(i, j, Color.FromArgb(pixel.R, pixel.G, textLength));
-
-                    charIndex++;
-                }
+                Marshal.Copy(rgbValues, 0, ptr, bytes);
+            }
+            finally
+            {
+                image.UnlockBits(bmpData);
             }
         }
 
-        private static Color ModifyPixelColor(int value)
-        {
-            // Extract the individual bytes from the integer value
-            byte byte3 = (byte)((value & 0xFF000000) >> 24), byte2 = (byte)((value & 0x00FF0000) >> 16), byte1 = (byte)((value & 0x0000FF00) >> 8), byte0 = (byte)(value & 0x000000FF);
-
-            // Create a new Color object using the extracted bytes
-            return Color.FromArgb(byte3, byte2, byte1, byte0);
-        }
-
-        private static double GetImageSizeInKB(Bitmap image) => (image.Width * image.Height * 16) / 1024.0; // Assuming each pixel stores 16 bits
+        private static double GetImageSizeInKB(Bitmap image) => (image.Width * image.Height * 8) / 1024.0; // Assuming each pixel stores 8 bits
     }
 }
