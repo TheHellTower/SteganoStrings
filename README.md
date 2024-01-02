@@ -12,7 +12,7 @@ This hides strings into a random image stored in user-file resources then the im
 
 ## 🎥 Preview
 
-[![](https://i.imgur.com/IFuyBW3.gif)](https://i.imgur.com/IFuyBW3.mp4)
+[View Video](https://i.imgur.com/IFuyBW3.mp4)
 [![](https://i.imgur.com/ZP11YlU.jpeg)](https://i.imgur.com/IFuyBW3.mp4)
 
 ## 📚 FAQ
